@@ -1297,6 +1297,8 @@ end
 
 
 function Kong.admin_content(options)
+  kong.worker_events.poll()
+
   local ctx = ngx.ctx
   if not ctx.workspace then
     ctx.workspace = kong.default_workspace
@@ -1363,6 +1365,7 @@ do
 
   function Kong.stream_config_listener()
     local sock, err = ngx.req.socket()
+
     if not sock then
       kong.log.crit("unable to obtain request socket: ", err)
       return
