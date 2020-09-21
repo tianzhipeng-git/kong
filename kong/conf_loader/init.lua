@@ -576,6 +576,7 @@ local CONF_INFERENCES = {
   cluster_mtls = { enum = { "shared", "pki" } },
   cluster_ca_cert = { typ = "string" },
   cluster_server_name = { typ = "string" },
+  cluster_status_ttl = { typ = "number" },
   kic = { typ = "boolean" },
 }
 
@@ -938,6 +939,10 @@ local function check_and_infer(conf, opts)
       errors[#errors + 1] = "only in-memory storage can be used when role = \"data_plane\"\n" ..
                             "Hint: set database = off in your kong.conf"
     end
+  end
+
+  if conf.cluster_status_ttl < 60 then
+    errors[#errors + 1] = "cluster_status_ttl must be 60 or greater"
   end
 
   if conf.role == "control_plane" or conf.role == "data_plane" then
