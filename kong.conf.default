@@ -1226,8 +1226,23 @@
                                  # Comma-separated list of paths to certificate
                                  # authority files for Lua cosockets in PEM format.
                                  #
-                                 # These certificates will be the combined
-                                 # into a single file during the startup phase.
+                                 # The special value `system` expands to the
+                                 # "usual default" provided by each distro. The following
+                                 # paths will be tested in order, and the first one found
+                                 # will be used:
+                                 #
+                                 # * /etc/ssl/certs/ca-certificates.crt (Debian/Ubuntu/Gentoo)
+                                 # * /etc/pki/tls/certs/ca-bundle.crt (Fedora/RHEL 6)
+                                 # * /etc/ssl/ca-bundle.pem (OpenSUSE)
+                                 # * /etc/pki/tls/cacert.pem (OpenELEC)
+                                 # * /etc/pki/ca-trust/extracted/pem/tls-ca-bundle.pem (CentOS/RHEL 7)
+                                 # * /etc/ssl/cert.pem (OpenBSD, Alpine)
+                                 #
+                                 # If no file is found on any of these paths, an error will
+                                 # be raised.
+                                 #
+                                 # `system` can be used by itself or in conjunction with other
+                                 # CA filepaths.
                                  #
                                  # Overrides lua_ssl_trusted_certificate if set.
 

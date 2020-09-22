@@ -809,12 +809,30 @@ local function check_and_infer(conf, opts)
   end
 
   if conf.lua_ssl_trusted_certificate_combined then
-    for _, path in ipairs(conf.lua_ssl_trusted_certificate_combined) do
+    local new_paths = {}
+
+    for i, path in ipairs(conf.lua_ssl_trusted_certificate_combined) do
+      if path == "system" then
+        local new_path, err = utils.get_system_trusted_certs_filepath()
+        if new_path then
+          path = new_path
+
+        else
+          errors[#errors + 1] =
+            "unable to locate system bundle for lua_ssl_trusted_certificate_combined \"system\" option: " ..
+            err
+        end
+      end
+
       if not pl_path.exists(path) then
         errors[#errors + 1] = "lua_ssl_trusted_certificate_combined: no such file at " ..
                                path
       end
+
+      new_paths[i] = path
     end
+
+    conf.lua_ssl_trusted_certificate_combined = new_paths
   end
 
   if conf.ssl_cipher_suite ~= "custom" then
