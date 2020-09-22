@@ -213,7 +213,13 @@ describe("NGINX conf compiler", function()
       local kong_nginx_conf = prefix_handler.compile_kong_conf(conf)
       assert.matches("lua_ssl_trusted_certificate%s+.*spec/fixtures/kong_spec%.key", kong_nginx_conf)
     end)
-
+    it("sets lua_ssl_trusted_certificate to a combined file", function()
+      local conf = assert(conf_loader(helpers.test_conf_path, {
+        lua_ssl_trusted_certificate_combined = { "spec/fixtures/kong_spec.crt" },
+      }))
+      local kong_nginx_conf = prefix_handler.compile_kong_conf(conf)
+      assert.matches("lua_ssl_trusted_certificate%s+.*ca_combined", kong_nginx_conf)
+    end)
     it("defines the client_max_body_size by default", function()
       local conf = assert(conf_loader(nil, {}))
       local nginx_conf = prefix_handler.compile_kong_conf(conf)

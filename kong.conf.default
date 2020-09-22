@@ -1222,6 +1222,15 @@
                                  #
                                  # See https://github.com/openresty/lua-nginx-module#lua_ssl_trusted_certificate
 
+#lua_ssl_trusted_certificate_combined =
+                                 # Comma-separated list of paths to certificate
+                                 # authority files for Lua cosockets in PEM format.
+                                 #
+                                 # These certificates will be the combined
+                                 # into a single file during the startup phase.
+                                 #
+                                 # Overrides lua_ssl_trusted_certificate if set.
+
 #lua_ssl_verify_depth = 1        # Sets the verification depth in the server
                                  # certificates chain used by Lua cosockets,
                                  # set by `lua_ssl_trusted_certificate`.
